@@ -9,6 +9,7 @@ const utils = require('../../utils/util.js');
 Page({
   data: {
     userInfo: {},
+    socket: null,
     is_reserved: false,
     last_reserv_time: null,
     debug_str: ""
@@ -22,16 +23,17 @@ Page({
   onLoad: function () {
     // initialize data
     this.setData({
+      socket: new WxSocket(app.globalData.serverUrl),
       userInfo: app.globalData.userInfo,
       last_reserve_time: new Date()})
 
     // setup a websocket connection
     try {
-      var socket = new WxSocket(app.globalData.serverUrl);
-      socket.connect();
-      this.setData({ debug_str: "connection success" })
+      this.data.socket.connect();
+      this.setData({debug_str: "connection success" })
     } catch(connectError) {
-      this.setData({ debug_str: "connection failed" })
+      console.log(connectError)
+      this.setData({debug_str: "connection failed" })
     }
   },
 

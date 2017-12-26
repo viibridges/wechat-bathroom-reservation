@@ -6,7 +6,7 @@ class WxSocket {
   }
 
   connect() {
-    wx.connectSocket(this.url);
+    wx.connectSocket({url: this.url});
   }
 
   send(data) {
