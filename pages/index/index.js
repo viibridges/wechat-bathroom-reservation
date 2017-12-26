@@ -8,15 +8,20 @@ const utils = require('../../utils/util.js')
 Page({
   data: {
     userInfo: {},
+    is_reserved: false,
+    last_reserv_time: null,
     debug_str: ""
   },
 
   //事件处理函数
-  bindViewTap: function () {
-    console.log('tap avatar')
+  reserveTap: function () {
+    this.setData({ last_reserve_time: new Date() })
   },
 
   onLoad: function () {
+    // initialize data
+    this.setData({last_reserve_time: new Date()})
+    // get user info
     wx.getUserInfo({
       success: res => {
         this.setData({
@@ -36,8 +41,8 @@ Page({
   onReady: function() {
     var that = this
     this.interval = setInterval(function(){
-      const currTime = utils.formatTime(new Date())
-      that.setData({ debug_str: currTime })
+      const currTime = new Date()
+      that.setData({ debug_str: utils.formatTimeDiff(currTime, that.data.last_reserve_time) })
     }, 1000)
   },
 

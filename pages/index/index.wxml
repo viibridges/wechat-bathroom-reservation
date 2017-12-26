@@ -16,5 +16,5 @@
     <image class="avatar-sm" src="{{userInfo.avatarUrl}}"></image>
   </view>
 
-  <button class="control-button">Reserve</button>
+  <button class="control-button" bindtap='reserveTap'>Reserve</button>
 </view>
