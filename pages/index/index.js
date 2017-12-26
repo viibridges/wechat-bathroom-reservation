@@ -2,8 +2,9 @@
 //获取应用实例
 
 var app = getApp();
-const WxSocket = require('../../utils/sockets.js');
-const utils = require('../../utils/util.js')
+const WxSocket = require('../../utils/socket.js');
+const utils = require('../../utils/util.js');
+
 
 Page({
   data: {
@@ -26,8 +27,8 @@ Page({
 
     // setup a websocket connection
     try {
-      socket = new WxSocket();
-      socket.connect(app.globalData.serverUrl);
+      var socket = new WxSocket(app.globalData.serverUrl);
+      socket.connect();
       this.setData({ debug_str: "connection success" })
     } catch(connectError) {
       this.setData({ debug_str: "connection failed" })

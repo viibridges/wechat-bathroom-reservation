@@ -7,7 +7,7 @@ App({
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
       }
     })
-    
+
     // 获取用户信息
     wx.getUserInfo({
       success: res => {
@@ -33,6 +33,6 @@ App({
   },
   globalData: {
     userInfo: null,
-    serverUrl: 'ws://127.0.0.1:8080'
+    serverUrl: 'ws://127.0.0.1:5678/'
   }
 })
