@@ -33,5 +33,7 @@ App({
       }
     })
   },
-  globalData: {}
+  globalData: {
+    serverUrl: 'ws://127.0.0.1:8080'
+  }
 })

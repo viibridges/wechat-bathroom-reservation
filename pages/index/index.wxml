@@ -5,6 +5,10 @@
     <text>{{userInfo.nickName}} is taking shit...</text>
   </view>
 
+  <view>
+    <text>debug: {{debug_str}}</text>
+  </view>
+
   <text>Finished:</text>
 
   <view class="finish-list">

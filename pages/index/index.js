@@ -1,32 +1,50 @@
 //index.js
 //获取应用实例
 
+var app = getApp();
+const WxSocket = require('../../utils/sockets.js');
+const utils = require('../../utils/util.js')
+
 Page({
   data: {
     userInfo: {},
-    hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo')
+    debug_str: ""
   },
-  
+
   //事件处理函数
-  bindViewTap: function() {
+  bindViewTap: function () {
     console.log('tap avatar')
   },
+
   onLoad: function () {
     wx.getUserInfo({
       success: res => {
         this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
+          userInfo: res.userInfo
         })
       }
     })
+    // setup a websocket connection
+    try {
+      socket = new WxSocket();
+      socket.connect(app.globalData.serverUrl);
+    } catch(connectError) {
+      this.setData({ debug_str: "connection failed" })
+    }
   },
-  getUserInfo: function(e) {
+
+  onReady: function() {
+    var that = this
+    setInterval(function(){
+      const currTime = utils.formatTime(new Date())
+      that.setData({ debug_str: currTime })
+    }, 1000)
+  },
+
+  getUserInfo: function (e) {
     console.log(e)
     this.setData({
-      userInfo: e.detail.userInfo,
-      hasUserInfo: true
+      userInfo: e.detail.userInfo
     })
   }
 })
