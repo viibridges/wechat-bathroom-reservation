@@ -20,40 +20,28 @@ Page({
 
   onLoad: function () {
     // initialize data
-    this.setData({last_reserve_time: new Date()})
-    // get user info
-    wx.getUserInfo({
-      success: res => {
-        this.setData({
-          userInfo: res.userInfo
-        })
-      }
-    })
+    this.setData({
+      userInfo: app.globalData.userInfo,
+      last_reserve_time: new Date()})
+
     // setup a websocket connection
     try {
       socket = new WxSocket();
       socket.connect(app.globalData.serverUrl);
+      this.setData({ debug_str: "connection success" })
     } catch(connectError) {
       this.setData({ debug_str: "connection failed" })
     }
   },
 
-  onReady: function() {
-    var that = this
-    this.interval = setInterval(function(){
-      const currTime = new Date()
-      that.setData({ debug_str: utils.formatTimeDiff(currTime, that.data.last_reserve_time) })
-    }, 1000)
-  },
-
-  onUnload: function() {
-    clearInterval(this.interval)
-  },
-
-  getUserInfo: function (e) {
-    console.log(e)
-    this.setData({
-      userInfo: e.detail.userInfo
-    })
-  }
+  // onReady: function() {
+  //   var that = this
+  //   this.interval = setInterval(function(){
+  //     const currTime = new Date()
+  //     that.setData({ debug_str: utils.formatTimeDiff(currTime, that.data.last_reserve_time) })
+  //   }, 1000)
+  // },
+  // onUnload: function() {
+  //   clearInterval(this.interval)
+  // }
 })
