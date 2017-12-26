@@ -1,0 +1,16 @@
+<!--index.wxml-->
+<view class="container">
+
+  <view class="status">
+    <text>{{userInfo.nickName}} is taking shit...</text>
+  </view>
+
+  <text>Finished:</text>
+
+  <view class="finish-list">
+    <image class="avatar-sm" src="{{userInfo.avatarUrl}}"></image>
+    <image class="avatar-sm" src="{{userInfo.avatarUrl}}"></image>
+  </view>
+
+  <button class="control-button">Reserve</button>
+</view>

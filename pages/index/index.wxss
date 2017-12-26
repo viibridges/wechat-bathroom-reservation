@@ -1,0 +1,24 @@
+/**index.wxss**/
+.status {
+  padding: 5% 0 50% 0;
+}
+
+.avatar-sm {
+  width: 90rpx;
+  height: 90rpx;
+  margin: 5rpx;
+  border-radius: 50%;
+}
+
+.finish-list {
+  flex-direction: row;
+  align-items: left;
+  margin-top: 3%;
+}
+
+.control-button {
+  background: aqua;
+  width: 256rpx;
+  margin-top: 15%;
+  text-align: center;
+}
