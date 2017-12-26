@@ -29,7 +29,7 @@ Page({
 
     // setup a websocket connection
     try {
-      this.data.socket.connect();
+      this.data.socket.connect()
       this.setData({debug_str: "connection success" })
     } catch(connectError) {
       console.log(connectError)
