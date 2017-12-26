@@ -35,10 +35,14 @@ Page({
 
   onReady: function() {
     var that = this
-    setInterval(function(){
+    this.interval = setInterval(function(){
       const currTime = utils.formatTime(new Date())
       that.setData({ debug_str: currTime })
     }, 1000)
+  },
+
+  onUnload: function() {
+    clearInterval(this.interval)
   },
 
   getUserInfo: function (e) {
