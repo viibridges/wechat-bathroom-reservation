@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import json, hashlib
+import utils
 from ipdb import set_trace as st
 
 class TokenManager():
@@ -11,6 +12,9 @@ class TokenManager():
   def __init__(self):
     self._requestTypes = {'return': 0, 'aquire': 1, 'reserve': 2, 'update': 3}
     self.userList = {}
+
+    self.token_time = -1    # timestamp when token is assign
+    self.reserve_time = -1  # timestamp when reservation is made
 
     self.token_userId = False
     self.reserve_userId = False
