@@ -19,19 +19,13 @@ class TokenManager():
   def parse_request(self, message_raw):
     request = json.loads(message_raw)  # de-stringify raw massege
     request_type = request['request']
+    userId = request['uniqueId']
     userInfo = request['userInfo']
-    return request_type, userInfo
+    return request_type, userId, userInfo
 
-
-  def encode_userInfo(self, userInfo):
-    infoStr = json.dumps(userInfo)
-    hashcode =  hashlib.sha224(infoStr.encode('utf-8')).hexdigest()
-    return hashcode
-    
 
   def process_request(self, request_message):
-    request_type, userInfo = self.parse_request(request_message)
-    userId = self.encode_userInfo(userInfo)
+    request_type, userId, userInfo = self.parse_request(request_message)
 
     # add to user list if the request came from new user
     broadcast_decision = False
