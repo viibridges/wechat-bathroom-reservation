@@ -45,6 +45,7 @@ Page({
     this.setData({
       'socket': new WxSocket(app.globalData.serverUrl),
       'userInfo': app.globalData.userInfo,
+      'userId': utils.generateUserId(app.globalData.userInfo),
       'status.start_time': new Date()
     })
 
@@ -73,13 +74,15 @@ Page({
   //
   sendRequest: function (req) {
     const requestType = { 'return': 0, 'aquire': 1, 'reserve': 2, 'update': 3 }
-    const message = { 'request': requestType[req], 'userInfo': this.data.userInfo };
+    const message = { 'request': requestType[req], 'uniqueId': this.data.userId, 'userInfo': this.data.userInfo };
     this.data.socket.send(message)
   },
 
   // start counter
   start_clock: function () {
-    this.setData({'status.start_time': new Date()})
+    const currTime = new Date()
+    this.setData({'status.start_time': currTime})
+    this.setData({ 'status.clock': utils.formatTimeDiff(currTime, currTime) }) // set to 00:00:00
     var that = this
     this.interval = setInterval(function () {
       const currTime = new Date()

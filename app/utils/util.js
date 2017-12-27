@@ -29,7 +29,17 @@ const formatNumber = n => {
   return n[1] ? n : '0' + n
 }
 
+const hashCode = s => {
+  return s.split("").reduce(function (a, b) { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0);
+}
+
+const generateUserId = userInfo => {
+  // generate userId from user info, user openID in the future
+  return hashCode(userInfo.avatarUrl)
+}
+
 module.exports = {
   formatTime: formatTime,
-  formatTimeDiff: formatTimeDiff
+  formatTimeDiff: formatTimeDiff,
+  generateUserId: generateUserId
 }
