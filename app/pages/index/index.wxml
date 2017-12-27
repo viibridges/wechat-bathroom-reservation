@@ -9,12 +9,11 @@
     <text>debug: {{debug_str}}</text>
   </view>
 
-  <text>Finished:</text>
+  <text>All Users:</text>
 
-  <view class="finish-list">
-    <image class="avatar-sm" src="{{userInfo.avatarUrl}}"></image>
-    <image class="avatar-sm" src="{{userInfo.avatarUrl}}"></image>
-  </view>
+   <view class="finish-list" wx:for="{{status.userList}}" wx:for-item="info" wx:key="idx">
+    <image class="avatar-sm" src="{{info.avatarUrl}}"></image>
+  </view> 
 
   <button class="control-button" bindtap='reserveTap'>Reserve</button>
 </view>

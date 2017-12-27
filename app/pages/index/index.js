@@ -13,10 +13,10 @@ Page({
 
     // system status
     status: {
-      start_time: null, // null indicates the bathroom is available
-      other_users: [],
-      token_user: null,
-      reserve_user: null,
+      start_time: false, // null indicates the bathroom is available
+      userList: {},
+      token_userId: false,
+      reserve_userId: false,
     },
 
     debug_str: ""
@@ -52,8 +52,14 @@ Page({
   },
 
   onShow: function () {
+    var that = this
     this.data.socket.recv(function(res){
-      console.log(res.data)
+      const status = JSON.parse(res.data)
+      that.setData({
+        'status.userList': status['userList'],
+        'status.token_userId': status['token_userId'],
+        'status.reserve_userId': status['reserve_userId'],
+      })
     })
   },
 
