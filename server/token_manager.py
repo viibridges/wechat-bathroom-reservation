@@ -83,8 +83,8 @@ class TokenManager():
     return -1
 
 
-  def envelope_message(self):
-    """ Envelope the class information to send """
+  def envelop_message(self):
+    """ envelop the class information to send """
     data = {
       'userList': list(self.userList.values()),
       'token_userId': self.key2id(self.token_userId),
@@ -109,4 +109,4 @@ if __name__ == '__main__':
   dec = manager.process_request(json.dumps({'request': 1, 'userInfo': 'user2'}))
   print("Broadcast: {}".format(dec))
 
-  print(manager.envelope_message())
+  print(manager.envelop_message())
