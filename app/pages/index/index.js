@@ -49,6 +49,12 @@ Page({
     this.data.socket.connect()
   },
 
+  onShow: function () {
+    this.data.socket.recv(function(res){
+      console.log(res.data)
+    })
+  },
+
   // onReady: function () {
   //   var that = this
   //   this.interval = setInterval(function () {
