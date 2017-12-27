@@ -14,11 +14,12 @@ Page({
 
     // system status
     status: {
-      start_time: false, // null indicates the bathroom is available
-      clock: "",         // clock string
       userList: {},
       token_userId: false,
       reserve_userId: false,
+      token_time: -1,
+      reserve_time: -1,
+      clock: ""         // clock string to display
     },
 
     debug_str: ""
@@ -29,11 +30,9 @@ Page({
     var status = this.data.status
     if (!status.token_userId) {      // bathroom is available
       this.sendRequest('aquire')
-      this.start_clock();
     }
     else {
       this.sendRequest('return')     // try return the key
-      this.end_clock()
       if (!status.reserve_userId) {  // bathroom in used and no one reserve
         this.sendRequest('reserve')
       }
@@ -46,7 +45,6 @@ Page({
       'socket': new WxSocket(app.globalData.serverUrl),
       'userInfo': app.globalData.userInfo,
       'userId': utils.generateUserId(app.globalData.userInfo),
-      'status.start_time': utils.newDate()
     })
 
     // setup a websocket connection
@@ -65,7 +63,16 @@ Page({
         'status.userList': status['userList'],
         'status.token_userId': status['token_userId'],
         'status.reserve_userId': status['reserve_userId'],
+        'status.token_time': status['token_time'],
+        'status.reserve_time': status['reserve_time']
       })
+
+      if (that.data.token_time != -1) {
+        that.start_clock()
+      }
+      else {
+        that.end_clock()
+      }
     })
   },
 
@@ -80,17 +87,17 @@ Page({
 
   // start counter
   start_clock: function () {
-    const currTime = utils.newDate()
-    this.setData({'status.start_time': currTime})
-    this.setData({ 'status.clock': utils.formatTime(0) }) // set to 00:00:00
     var that = this
+    this.setData({ 'status.clock': utils.formatTime(0) }) // set to 00:00:00
     this.interval = setInterval(function () {
       const currTime = utils.newDate()
-      that.setData({ 'status.clock': utils.formatTime(currTime - that.data.status.start_time) })
+      that.setData({ 'status.clock': utils.formatTime(currTime - that.data.status.token_time) })
     }, 1000)
   },
 
-  end_clock: function() {
-    clearInterval(this.interval)
+  end_clock: function () {
+    if (typeof this.interval !== 'undefined') {
+      clearInterval(this.interval)
+    }
   },
 })
