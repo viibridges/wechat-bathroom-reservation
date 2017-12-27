@@ -18,7 +18,6 @@ class TokenManager():
 
   def parse_request(self, message_raw):
     request = json.loads(message_raw)  # de-stringify raw massege
-    print(request)
     request_type = request['request']
     userInfo = request['userInfo']
     return request_type, userInfo
