@@ -9,7 +9,7 @@ class TokenManager():
   when receiving request from the clients
   """
   def __init__(self):
-    self._requestTypes = {'return': 0, 'aquire': 1, 'reserve': 2}
+    self._requestTypes = {'return': 0, 'aquire': 1, 'reserve': 2, 'update': 3}
     self.userList = {}
 
     self.token_userId = False
@@ -18,6 +18,7 @@ class TokenManager():
 
   def parse_request(self, message_raw):
     request = json.loads(message_raw)  # de-stringify raw massege
+    print(request)
     request_type = request['request']
     userInfo = request['userInfo']
     return request_type, userInfo
@@ -38,6 +39,10 @@ class TokenManager():
     if userId not in self.userList:
       self.userList.update({userId: userInfo})
       broadcast_decision = True
+
+    # if new connection/user call for a status update, broadcast the system status
+    if request_type is self._requestTypes['update']:
+      return True
 
 
     # log ill logics
