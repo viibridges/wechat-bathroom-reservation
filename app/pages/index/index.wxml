@@ -4,6 +4,11 @@
   <view class="status">
     <text wx:if="{{status.token_userId}}">{{userInfo.nickName}} is taking shower...</text>
     <text wx:else>bathroom is available</text>
+
+    <view></view>
+
+    <text wx:if="{{status.reserve_userId}}">{{userInfo.nickName}} reserved</text>
+    <text wx:else>the reservation is available</text>
   </view>
 
   <!-- <view>
