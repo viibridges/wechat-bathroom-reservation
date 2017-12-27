@@ -2,18 +2,21 @@
 <view class="container">
 
   <view class="status">
-    <text>{{userInfo.nickName}} is taking shit...</text>
+    <text wx:if="{{status.token_userId}}">{{userInfo.nickName}} is taking shower...</text>
+    <text wx:else>bathroom is available</text>
   </view>
 
-  <view>
+  <!-- <view>
     <text>debug: {{debug_str}}</text>
-  </view>
+  </view> -->
 
   <text>All Users:</text>
 
-   <view class="finish-list" wx:for="{{status.userList}}" wx:for-item="info" wx:key="idx">
+  <view class="finish-list" wx:for="{{status.userList}}" wx:for-item="info" wx:key="idx">
     <image class="avatar-sm" src="{{info.avatarUrl}}"></image>
-  </view> 
+  </view>
 
-  <button class="control-button" bindtap='reserveTap'>Reserve</button>
+  <button class="request-button available-color" bindtap='reserveTap' wx:if="{{!status.token_userId}}">Available</button>
+  <button class="request-button inuse-color" bindtap='reserveTap' wx:else>In Use</button>
+
 </view>

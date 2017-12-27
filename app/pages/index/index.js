@@ -9,6 +9,7 @@ const utils = require('../../utils/util.js');
 Page({
   data: {
     userInfo: {},
+    userId: null,
     socket: null,
 
     // system status
@@ -25,11 +26,12 @@ Page({
   //事件处理函数
   reserveTap: function () {
     var status = this.data.status;
-    if (!status.start_time) {      // bathroom is available  
-      this.sendRequest('aquest')
+    if (!status.token_userId) {      // bathroom is available
+      this.sendRequest('aquire')
     }
     else{
-      if (!status.reserve_user) {  // bathroom in used and no one reserve
+      this.sendRequest('return')     // try return the key
+      if (!status.reserve_userId) {  // bathroom in used and no one reserve
         this.sendRequest('reserve')
       }
     }

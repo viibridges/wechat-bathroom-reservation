@@ -1,4 +1,5 @@
 /**index.wxss**/
+
 .status {
   padding: 5% 0 50% 0;
 }
@@ -16,9 +17,14 @@
   margin-top: 3%;
 }
 
-.control-button {
-  background: aqua;
+.request-button {
   width: 256rpx;
   margin-top: 15%;
   text-align: center;
+}
+.available-color {
+  background: aqua;
+}
+.inuse-color {
+  background: red;
 }
