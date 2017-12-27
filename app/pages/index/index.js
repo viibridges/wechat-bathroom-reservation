@@ -26,13 +26,11 @@ Page({
   reserveTap: function () {
     var status = this.data.status;
     if (!status.start_time) {      // bathroom is available  
-      const request = { request: 1, userInfo:this.data.userInfo };
-      this.data.socket.send(request)
+      this.sendRequest('aquest')
     }
     else{
       if (!status.reserve_user) {  // bathroom in used and no one reserve
-        const request = { request: 2, userInfo: this.data.userInfo };
-        this.data.socket.send(request)
+        this.sendRequest('reserve')
       }
     }
   },
@@ -47,6 +45,10 @@ Page({
 
     // setup a websocket connection
     this.data.socket.connect()
+  },
+
+  onReady: function () {
+    this.sendRequest('update')
   },
 
   onShow: function () {
@@ -65,4 +67,11 @@ Page({
   // onUnload: function () {
   //   clearInterval(this.interval)
   // }
+
+  // user methods
+  sendRequest: function(req) {
+    const requestType = {'return': 0, 'aquire': 1, 'reserve': 2, 'update': 3}
+    const message = { 'request': requestType[req], 'userInfo': this.data.userInfo };
+    this.data.socket.send(message)
+  },
 })
