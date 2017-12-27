@@ -77,22 +77,12 @@ class TokenManager():
     return broadcast_decision
 
 
-  def key2id(self, userId):
-    idx = 0
-    for key in self.userList.keys():
-      if userId == key:
-        return idx
-      else:
-        idx += 1
-    return -1
-
-
   def envelop_message(self):
     """ envelop the class information to send """
     data = {
-      'userList': list(self.userList.values()),
-      'token_userId': self.key2id(self.token_userId),
-      'reserve_userId': self.key2id(self.reserve_userId)
+      'userList': self.userList,
+      'token_userId': self.token_userId,
+      'reserve_userId': self.reserve_userId
     }
     message = json.dumps(data)
 
