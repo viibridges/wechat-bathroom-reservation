@@ -17,6 +17,6 @@
   </view>
 
   <button class="request-button available-color" bindtap='reserveTap' wx:if="{{!status.token_userId}}">Available</button>
-  <button class="request-button inuse-color" bindtap='reserveTap' wx:else>In Use</button>
+  <button class="request-button inuse-color" bindtap='reserveTap' wx:else>{{status.clock}}</button>
 
 </view>
