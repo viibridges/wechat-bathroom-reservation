@@ -42,33 +42,50 @@ class TokenManager():
       return True
 
 
-    # log ill logics
-    if userId == self.token_userId and request_type in (self._requestTypes['aquire'], self._requestTypes['reserve']):
-      print("can't aquire or reserve when keeping the token.")
+    #
+    # stop log ill logics
+    # 
+    if self.token_userId and request_type == self._requestTypes['aquire']:
+      print("can't aquire when somebody is keeping it.")
+      return broadcast_decision
+    if self.reserve_userId and request_type == self._requestTypes['reserve']:
+      print("can't reserve when somebody has already reserved.")
+      return broadcast_decision
+    if userId == self.token_userId and request_type == self._requestTypes['reserve']:
+      print("can't reserve when keeping the token.")
       return broadcast_decision
     if userId != self.token_userId and request_type is self._requestTypes['return']:
       print("can't return the token without keeping it.")
       return broadcast_decision
+    if userId == self.reserve_userId and request_type == self._requestTypes['reserve']:
+      print("can't reserve twice.")
+      return broadcast_decision
 
 
+    #
+    # process legitimate logics
+    #
     if False: pass
     elif request_type is self._requestTypes['return']:
-      if userId == self.token_userId:
-        self.token_userId = False
-        broadcast_decision = True
+      self.token_userId = False
+      self.token_time = -1
+      broadcast_decision = True
 
     elif request_type is self._requestTypes['aquire']:
       # if token is available, then assign token to user
-      if not self.token_userId and userId != self.token_userId:
-        self.token_userId = userId
+      self.token_userId = userId
+      self.token_time = utils.secsfrom1970()
+      # if aquire request from reserve user, then reset reserve time and reserve_user
+      if userId == self.reserve_userId: 
         self.reserve_userId = False # release reservation
-        broadcast_decision = True
+        self.reserve_time = -1
+      broadcast_decision = True
 
     elif request_type is self._requestTypes['reserve']:
       # if token was assign but reservation is open then reserve token
-      if not self.reserve_userId and userId != self.reserve_userId:
-        self.reserve_userId = userId
-        broadcast_decision = True
+      self.reserve_userId = userId
+      self.reserve_time = utils.secsfrom1970()
+      broadcast_decision = True
     else:
       print("Unkown request_type {}".format(request_type))
 
@@ -78,6 +95,8 @@ class TokenManager():
   def envelop_message(self):
     """ envelop the class information to send """
     data = {
+      'token_time': self.token_time,
+      'reserve_time': self.reserve_time,
       'userList': self.userList,
       'token_userId': self.token_userId,
       'reserve_userId': self.reserve_userId
