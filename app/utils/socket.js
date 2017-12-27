@@ -10,7 +10,7 @@ class WxSocket {
   }
 
   send(data) {
-    data_str = JSON.stringify(data)
+    const data_str = JSON.stringify(data)
     wx.sendSocketMessage({data: data_str});
   }
 };
