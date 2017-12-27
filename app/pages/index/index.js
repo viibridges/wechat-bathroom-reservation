@@ -46,7 +46,7 @@ Page({
       'socket': new WxSocket(app.globalData.serverUrl),
       'userInfo': app.globalData.userInfo,
       'userId': utils.generateUserId(app.globalData.userInfo),
-      'status.start_time': new Date()
+      'status.start_time': utils.newDate()
     })
 
     // setup a websocket connection
@@ -80,13 +80,13 @@ Page({
 
   // start counter
   start_clock: function () {
-    const currTime = new Date()
+    const currTime = utils.newDate()
     this.setData({'status.start_time': currTime})
-    this.setData({ 'status.clock': utils.formatTimeDiff(currTime, currTime) }) // set to 00:00:00
+    this.setData({ 'status.clock': utils.formatTime(0) }) // set to 00:00:00
     var that = this
     this.interval = setInterval(function () {
-      const currTime = new Date()
-      that.setData({ 'status.clock': utils.formatTimeDiff(currTime, that.data.status.start_time) })
+      const currTime = utils.newDate()
+      that.setData({ 'status.clock': utils.formatTime(currTime - that.data.status.start_time) })
     }, 1000)
   },
 
