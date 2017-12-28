@@ -137,7 +137,7 @@ Page({
   // start flasher
   start_flasher: function () {
     var that = this
-    var flash = true
+    var flash = false
     this.flasher_interv = setInterval(function () {
       if (flash) {
         that.setData({ 'gui.shower_mrk': "../../assets/icons/showing.png" })

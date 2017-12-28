@@ -1,7 +1,8 @@
 /**index.wxss**/
 
 .main {
-  height: 10000rpx;
+  padding-top: 30rpx;
+  padding-bottom: 100rpx;
 }
 
 .bg-color-0 {
