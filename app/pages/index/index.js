@@ -77,7 +77,7 @@ Page({
         'status.token_userId': status['token_userId'],
         'status.reserve_userId': status['reserve_userId'],
         'status.token_time': status['token_time'],
-        'status.reserve_time': status['reserve_time']
+        'status.reserve_time': status['reserve_time'],
       })
 
       // process user list
@@ -115,7 +115,15 @@ Page({
         that.end_flasher()
         that.end_token_timer()
         that.end_clock()
+
+        // if someone has reserved the bathroom, start the reserve timer
+        if (that.data.status.reserve_userId) {
+          that.start_reserve_timer()
+        }
       }
+
+      // if current the received message is 'force-cancel', than end the reservation timer
+      if (status['request_type'] == settings.request_types['force-cancel']){that.end_reserve_timer}
     })
   },
 
@@ -188,12 +196,27 @@ Page({
     this.token_timer = setInterval(function () {
       const currTime = utils.newDate()
       if (currTime - that.data.status.token_time > settings.time.token_interval) {
-        // if token being kept more than an interval, all users send force-token return command
+        // if token being kept more than an interval, all online users send force-return command
         that.sendRequest('force-return')
       }
     }, settings.time.clock_interval)
   },
   end_token_timer: function() {
     clearInterval(this.token_timer)
-  }
+  },
+
+  // start timer for reserver
+  start_reserve_timer: function () {
+    var that = this
+    this.reserve_timer = setInterval(function () {
+      const currTime = utils.newDate()
+      if (currTime - that.data.status.reserve_time > settings.time.reserve_interval) {
+        // if reservation last more than an interval after the bathroom is available, all online users send force-cancel command
+        that.sendRequest('force-cancel')
+      }
+    }, settings.time.clock_interval)
+  },
+  end_reserve_timer: function () {
+    clearInterval(this.reserve_timer)
+  },
 })
