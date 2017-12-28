@@ -79,6 +79,9 @@ class TokenManager():
     if userId == self.token_userId and request_type == self._requestTypes['reserve']:
       print("can't reserve when keeping the token.")
       return broadcast_decision
+    if not self.token_userId and request_type == self._requestTypes['reserve']:
+      print("can't reserve when the token is free (why not acquiring it).")
+      return broadcast_decision
     if userId != self.token_userId and request_type is self._requestTypes['return']:
       print("can't return the token without keeping it.")
       return broadcast_decision
