@@ -34,8 +34,14 @@ class TokenManager():
     # add to user list if the request came from new user
     broadcast_decision = False
     if userId not in self.userList:
+      userInfo['reserving'] = False
+      userInfo['aquiring'] = False
+      userInfo['returns'] = 0
       self.userList.update({userId: userInfo})
       broadcast_decision = True
+    else:
+      # replace userInfo in userList for further editing
+      userInfo = self.userList[userId]
 
     # if new connection/user call for a status update, broadcast the system status
     if request_type is self._requestTypes['update']:
@@ -67,6 +73,8 @@ class TokenManager():
     #
     if False: pass
     elif request_type is self._requestTypes['return']:
+      userInfo['returns'] += 1   # record a completed aquiring
+      userInfo['aquiring'] = False
       self.token_userId = False
       self.token_time = -1
       broadcast_decision = True
@@ -75,14 +83,17 @@ class TokenManager():
       # if token is available, then assign token to user
       self.token_userId = userId
       self.token_time = utils.secsfrom1970()
+      userInfo['aquiring'] = True  # record keeping the token
       # if aquire request from reserve user, then reset reserve time and reserve_user
       if userId == self.reserve_userId: 
         self.reserve_userId = False # release reservation
         self.reserve_time = -1
+        userInfo['reserving'] = False
       broadcast_decision = True
 
     elif request_type is self._requestTypes['reserve']:
       # if token was assign but reservation is open then reserve token
+      userInfo['reserving'] = True  # record reserving the token
       self.reserve_userId = userId
       self.reserve_time = utils.secsfrom1970()
       broadcast_decision = True
