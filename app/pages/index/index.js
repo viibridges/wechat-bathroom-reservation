@@ -4,6 +4,7 @@
 var app = getApp();
 const WxSocket = require('../../utils/socket.js');
 const utils = require('../../utils/util.js');
+const assets = require('assets.js')
 
 
 Page({
@@ -28,6 +29,7 @@ Page({
       main_img: "",
       button_img: "",
       shower_mrk: "",
+      user_list: [],
     },
 
     debug_str: ""
@@ -37,7 +39,7 @@ Page({
   reserveTap: function () {
     var status = this.data.status
     if (!status.token_userId) {      // bathroom is available
-      this.sendRequest('aquire')
+      this.sendRequest('acquire')
     }
     else {
       if (this.data.userId == this.data.status.token_userId) {
@@ -81,12 +83,11 @@ Page({
 
       // when bathroom is in use
       if (that.data.status.token_userId) {
-        // set background color
         that.setData({
           'gui.bg_color': "blueviolet",
-          'gui.main_img': "../../assets/icons/shower.png",
-          'gui.button_img': "../../assets/icons/button_red.png",
-          'gui.shower_mrk': "../../assets/icons/showing.png"
+          'gui.main_img': assets.bathroom.available,
+          'gui.button_img': assets.buttons.green,
+          'gui.shower_mrk': assets.marks.empty
         })
         that.start_clock()
         that.start_flasher()
@@ -94,7 +95,7 @@ Page({
         // if reservation available, change button color
         if (!that.data.status.reserve_userId) {
           that.setData({
-            'gui.button_img': "../../assets/icons/button_orange.png",
+            'gui.button_img': assets.buttons.orange,
           })
         }
       }
@@ -102,8 +103,8 @@ Page({
       else {
         that.setData({
           'gui.bg_color': "dodgerblue",
-          'gui.main_img': "../../assets/icons/shower-waterless.png",
-          'gui.button_img': "../../assets/icons/button_green.png",
+          'gui.main_img': assets.bathroom.available,
+          'gui.button_img': assets.buttons.green,
           'gui.clock': "",
         })
         that.end_flasher()
@@ -116,9 +117,19 @@ Page({
   // User Methods
   //
   sendRequest: function (req) {
-    const requestType = { 'return': 0, 'aquire': 1, 'reserve': 2, 'update': 3 }
+    const requestType = { 'return': 0, 'acquire': 1, 'reserve': 2, 'update': 3 }
     const message = { 'request': requestType[req], 'uniqueId': this.data.userId, 'userInfo': this.data.userInfo };
     this.data.socket.send(message)
+  },
+
+  // parse the userList received from server, return a user list for gui display
+  process_userList: function (userList) {
+    for (var key in userList) {
+      const value = userList.key
+      var user = { avatar: value.avatarUrl}
+      if (value.acquiring) {user.mark = this.imgs.bathing_mrk}
+      //TOBEFINISH
+    }
   },
 
   // start counter
@@ -140,16 +151,16 @@ Page({
     var flash = false
     this.flasher_interv = setInterval(function () {
       if (flash) {
-        that.setData({ 'gui.shower_mrk': "../../assets/icons/showing.png" })
+        that.setData({ 'gui.shower_mrk': assets.marks.using })
       }
       else {
-        that.setData({ 'gui.shower_mrk': "" })
+        that.setData({ 'gui.shower_mrk': assets.marks.empty })
       }
       flash = !flash
     }, 500)
   },
   end_flasher: function () {
     clearInterval(this.flasher_interv)
-    this.setData({ 'gui.shower_mrk': "../../assets/icons/showing.png" })
+    this.setData({ 'gui.shower_mrk': assets.marks.using })
   },
 })
