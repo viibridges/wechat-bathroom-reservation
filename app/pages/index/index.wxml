@@ -12,7 +12,15 @@
 <view class="user-list">
   <text>整整齐齐一家人</text>
   <view class="finish-list" wx:for="{{status.userList}}" wx:for-item="info" wx:key="idx">
-    <image class="avatar-sm" src="{{info.avatarUrl}}"></image>
+  <view class="avatar-sm">
+    <image src="{{info.avatarUrl}}"></image>
+    <image class="mark" src="../../assets/icons/check.png"></image>
+    </view>
+      <view class="avatar-sm">
+        <image src="{{info.avatarUrl}}"></image>
+    <image class="mark" src="../../assets/icons/check.png"></image>
+</view>
+
   </view>
   </view>
 
@@ -21,7 +29,7 @@
   </view>
 
   <view class="block-image">
-    <image class="button-image" src="../../assets/icons/dot_red.png"></image>
+    <image class="button-image" src="../../assets/icons/button_red.png"></image>
   </view>
 
 </view>

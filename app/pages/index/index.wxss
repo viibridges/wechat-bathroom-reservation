@@ -11,7 +11,6 @@
 .block-image {
   display: flex;
   margin: auto;
-  flex-direction: column;
 }
 
 .main-image {
@@ -42,12 +41,27 @@ text {
   margin-top: 5%;
 }
 
+.finish-list {
+  display: flex;
+  flex-direction: row;
+}
+
 .avatar-sm {
   width: 90rpx;
   height: 90rpx;
-  margin-right: 5rpx;
+  margin-right: 15rpx;
   margin-top: 20rpx;
   border-radius: 10%;
+  z-index: 1;
+}
+.avatar-sm image {
+  position: absolute;
+  width: 90rpx;
+  height: 90rpx;
+}
+.mark {
+  position: relative;
+  z-index: 2;
 }
 
 .button-image {
@@ -60,9 +74,10 @@ text {
   display: flex;
   margin: auto;
 }
+
 .br-image image {
   width: 95%;
-  height:50rpx;
+  height: 50rpx;
   margin: auto;
   margin-bottom: 20rpx;
 }
