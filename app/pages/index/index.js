@@ -5,6 +5,7 @@ var app = getApp();
 const WxSocket = require('../../utils/socket.js');
 const utils = require('../../utils/util.js');
 const assets = require('assets.js')
+const settings = require('settings.js')
 
 
 Page({
@@ -86,12 +87,10 @@ Page({
         'gui.user_list': that.process_userList(status['userList'])
       })
 
-      console.log(that.data.gui.user_list)
-
       // when bathroom is in use
       if (that.data.status.token_userId) {
         that.setData({
-          'gui.bg_color': "blueviolet",
+          'gui.bg_color': settings.colors.bg.inuse,
           'gui.main_img': assets.bathroom.available,
           'gui.button_img': assets.buttons.green,
           'gui.shower_mrk': assets.marks.empty
@@ -109,7 +108,7 @@ Page({
       // when bathroom is available
       else {
         that.setData({
-          'gui.bg_color': "dodgerblue",
+          'gui.bg_color': settings.colors.bg.available,
           'gui.main_img': assets.bathroom.available,
           'gui.button_img': assets.buttons.green,
           'gui.clock': "",
@@ -124,8 +123,7 @@ Page({
   // User Methods
   //
   sendRequest: function (req) {
-    const requestType = { 'return': 0, 'acquire': 1, 'reserve': 2, 'update': 3 }
-    const message = { 'request': requestType[req], 'uniqueId': this.data.userId, 'userInfo': this.data.userInfo };
+    const message = { 'request': settings.request_types[req], 'uniqueId': this.data.userId, 'userInfo': this.data.userInfo };
     this.data.socket.send(message)
   },
 
@@ -152,7 +150,7 @@ Page({
     this.clock_interv = setInterval(function () {
       const currTime = utils.newDate()
       that.setData({ 'gui.clock': utils.formatTime(currTime - that.data.status.token_time) })
-    }, 1000)
+    }, settings.time.clock_interval)
   },
   end_clock: function () {
     clearInterval(this.clock_interv)
@@ -170,7 +168,7 @@ Page({
         that.setData({ 'gui.shower_mrk': assets.marks.empty })
       }
       flash = !flash
-    }, 500)
+    }, settings.time.flash_interval)
   },
   end_flasher: function () {
     clearInterval(this.flasher_interv)
