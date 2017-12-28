@@ -26,6 +26,14 @@
         <image class="mark" src="{{gui.shower_mrk}}"></image>
       </view>
     </view>
+
+    <view class="finish-list" wx:for="{{gui.user_list}}" wx:for-item="user" wx:key="idx">
+      <view class="avatar-sm">
+        <image src="{{user.avatar}}"></image>
+        <image class="mark" src="{{user.mark}}"></image>
+      </view>
+    </view>
+
   </view>
 
   <view class="br-image">

@@ -15,7 +15,7 @@ module.exports = {
   marks: {
     empty: "",
     check: "../../assets/icons/check.png",
-    schedule: "../../assets/icons/schedule.png",
+    reserve: "../../assets/icons/schedule.png",
     using: "../../assets/icons/showing.png",
   },
 }

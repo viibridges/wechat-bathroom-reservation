@@ -81,6 +81,13 @@ Page({
         'status.reserve_time': status['reserve_time']
       })
 
+      // process user list
+      that.setData({
+        'gui.user_list': that.process_userList(status['userList'])
+      })
+
+      console.log(that.data.gui.user_list)
+
       // when bathroom is in use
       if (that.data.status.token_userId) {
         that.setData({
@@ -124,12 +131,18 @@ Page({
 
   // parse the userList received from server, return a user list for gui display
   process_userList: function (userList) {
+    var user_list = []
     for (var key in userList) {
-      const value = userList.key
+      const value = userList[key]
       var user = { avatar: value.avatarUrl}
-      if (value.acquiring) {user.mark = this.imgs.bathing_mrk}
-      //TOBEFINISH
+      if (false) {}
+      else if (value.acquiring) { user.mark = assets.marks.using }
+      else if (value.reserving) { user.mark = assets.marks.reserve }
+      else if (value.returns)   { user.mark = assets.marks.check }
+      else { user.mark = assets.marks.empty}
+      user_list.push(user)
     }
+    return user_list
   },
 
   // start counter
