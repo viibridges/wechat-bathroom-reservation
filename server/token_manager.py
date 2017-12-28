@@ -10,7 +10,9 @@ class TokenManager():
   when receiving request from the clients
   """
   def __init__(self):
-    self._requestTypes = {'return': 0, 'acquire': 1, 'reserve': 2, 'update': 3}
+    self._requestTypes = {
+      'return': 0, 'acquire': 1, 'reserve': 2, 'cancel': 3,
+      'update': 4, 'force-return': 5, 'force-cancel': 6}
     self.userList = {}
 
     self.token_time = -1    # timestamp when token is assign
@@ -28,6 +30,13 @@ class TokenManager():
     return request_type, userId, userInfo
 
 
+  def findUser(self, condition):
+    # return userId from self.userList if meet condition(userInfo)
+    for userId, userInfo in self.userList.items():
+      if condition(userInfo): return userId
+    return None
+
+
   def process_request(self, request_message):
     request_type, userId, userInfo = self.parse_request(request_message)
 
@@ -40,7 +49,17 @@ class TokenManager():
       self.userList.update({userId: userInfo})
       broadcast_decision = True
     else:
-      # replace userInfo in userList for further editing
+      # NOTE: the request could be sent from other people, so the userId and the userInfo
+      #       may not be the user of interest, we need to change them for further editing
+      if None: pass
+      elif request_type == self._requestTypes['force-return']:
+        userId = self.findUser(lambda x: x['acquiring'])
+        request_type = self._requestTypes['return']  # pretend this is a normal request
+      elif request_type == self._requestTypes['force-cancel']:
+        userId = self.findUser(lambda x: x['reserving'])
+        request_type = self._requestTypes['cancel']  # pretend this is a normal request
+      if not userId: return broadcast  # if user of interest not found, return immediately
+
       userInfo = self.userList[userId]
 
     # if new connection/user call for a status update, broadcast the system status
@@ -65,6 +84,9 @@ class TokenManager():
       return broadcast_decision
     if userId == self.reserve_userId and request_type == self._requestTypes['reserve']:
       print("can't reserve twice.")
+      return broadcast_decision
+    if userId != self.reserve_userId and request_type == self._requestTypes['cancel']:
+      print("can't cancel without reserving.")
       return broadcast_decision
 
 
@@ -97,6 +119,15 @@ class TokenManager():
       self.reserve_userId = userId
       self.reserve_time = utils.secsfrom1970()
       broadcast_decision = True
+
+    elif request_type is self._requestTypes['cancel']:
+      # cancel reservation
+      userInfo['reserving'] = False
+      self.reserve_userId = False
+      self.reserve_time = -1
+      broadcast_decision = True
+      
+
     else:
       print("Unkown request_type {}".format(request_type))
 
