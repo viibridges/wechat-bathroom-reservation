@@ -25,11 +25,11 @@ Page({
 
     // GUI elements
     gui: {
-      bg_color: "",
+      bg_color: settings.colors.bg.available,
       clock: "",
-      main_img: "",
-      button_img: "",
-      shower_mrk: "",
+      main_img: assets.bathroom.available,
+      button_img: assets.buttons.green,
+      shower_mrk: assets.marks.empty,
       user_list: [],
     },
   },
