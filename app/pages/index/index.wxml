@@ -2,7 +2,7 @@
 <view class="main" style="background-color: {{gui.bg_color}}">
 
   <view class="block-image">
-    <image class="main-image" src="{{main_img}}"></image>
+    <image class="main-image" src="{{gui.main_img}}"></image>
   </view>
 
   <view class="time-display">
@@ -23,7 +23,7 @@
 
       <view class="avatar-sm">
         <image src="{{info.avatarUrl}}"></image>
-        <image class="mark" src="../../assets/icons/showing.png"></image>
+        <image class="mark" src="{{gui.shower_mrk}}"></image>
       </view>
     </view>
   </view>
@@ -33,7 +33,7 @@
   </view>
 
   <view class="block-image">
-    <image class="button-image" src="{{button_img}}" bindtap="reserveTap"></image>
+    <image class="button-image" src="{{gui.button_img}}" bindtap="reserveTap"></image>
   </view>
 
 </view>

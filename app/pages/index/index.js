@@ -27,6 +27,7 @@ Page({
       clock: "",
       main_img: "",
       button_img: "",
+      shower_mrk: "",
     },
 
     debug_str: ""
@@ -83,23 +84,29 @@ Page({
         // set background color
         that.setData({
           'gui.bg_color': "blueviolet",
-          'main_img': "../../assets/icons/shower.png",
-          'button_img': "../../assets/icons/button_red.png",
+          'gui.main_img': "../../assets/icons/shower.png",
+          'gui.button_img': "../../assets/icons/button_red.png",
+          'gui.shower_mrk': "../../assets/icons/showing.png"
         })
         that.start_clock()
+        that.start_flasher()
+
         // if reservation available, change button color
-        that.setData({
-          'button_img': "../../assets/icons/button_orange.png",
-        })
+        if (!that.data.status.reserve_userId) {
+          that.setData({
+            'gui.button_img': "../../assets/icons/button_orange.png",
+          })
+        }
       }
       // when bathroom is available
       else {
         that.setData({
           'gui.bg_color': "dodgerblue",
-          'main_img': "../../assets/icons/shower-waterless.png",
-          'button_img': "../../assets/icons/button_green.png",
+          'gui.main_img': "../../assets/icons/shower-waterless.png",
+          'gui.button_img': "../../assets/icons/button_green.png",
           'gui.clock': "",
         })
+        that.end_flasher()
         that.end_clock()
       }
     })
@@ -118,13 +125,31 @@ Page({
   start_clock: function () {
     var that = this
     this.setData({ 'gui.clock': utils.formatTime(0) }) // set to 00:00:00
-    this.interval = setInterval(function () {
+    this.clock_interv = setInterval(function () {
       const currTime = utils.newDate()
       that.setData({ 'gui.clock': utils.formatTime(currTime - that.data.status.token_time) })
     }, 1000)
   },
-
   end_clock: function () {
-    clearInterval(this.interval)
+    clearInterval(this.clock_interv)
+  },
+
+  // start flasher
+  start_flasher: function () {
+    var that = this
+    var flash = true
+    this.flasher_interv = setInterval(function () {
+      if (flash) {
+        that.setData({ 'gui.shower_mrk': "../../assets/icons/showing.png" })
+      }
+      else {
+        that.setData({ 'gui.shower_mrk': "" })
+      }
+      flash = !flash
+    }, 500)
+  },
+  end_flasher: function () {
+    clearInterval(this.flasher_interv)
+    this.setData({ 'gui.shower_mrk': "../../assets/icons/showing.png" })
   },
 })
