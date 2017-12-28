@@ -48,23 +48,26 @@ class TokenManager():
       userInfo['returns'] = 0
       self.userList.update({userId: userInfo})
       broadcast_decision = True
-    else:
-      # NOTE: the request could be sent from other people, so the userId and the userInfo
-      #       may not be the user of interest, we need to change them for further editing
-      if None: pass
-      elif request_type == self._requestTypes['force-return']:
-        userId = self.findUser(lambda x: x['acquiring'])
-        request_type = self._requestTypes['return']  # pretend this is a normal request
-      elif request_type == self._requestTypes['force-cancel']:
-        userId = self.findUser(lambda x: x['reserving'])
-        request_type = self._requestTypes['cancel']  # pretend this is a normal request
-      if not userId: return broadcast  # if user of interest not found, return immediately
-
-      userInfo = self.userList[userId]
 
     # if new connection/user call for a status update, broadcast the system status
-    if request_type is self._requestTypes['update']:
-      return True
+    if request_type is self._requestTypes['update']: return True
+
+    #
+    # NOTE: the request could be sent from other people, so the userId and the userInfo
+    #       may not be the user of interest, we need to change them for further editing
+    if None: pass
+    elif request_type == self._requestTypes['force-return']:
+      userId = self.findUser(lambda x: x['acquiring'])
+      request_type = self._requestTypes['return']  # pretend this is a normal request
+    elif request_type == self._requestTypes['force-cancel']:
+      userId = self.findUser(lambda x: x['reserving'])
+      request_type = self._requestTypes['cancel']  # pretend this is a normal request
+
+    if not userId: 
+      print("can't find user of interest. request:({})".format(request_type))
+      return broadcast_decision
+
+    userInfo = self.userList[userId]
 
 
     #
