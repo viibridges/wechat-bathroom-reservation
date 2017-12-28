@@ -18,9 +18,13 @@
     </view>
       <view class="avatar-sm">
         <image src="{{info.avatarUrl}}"></image>
-    <image class="mark" src="../../assets/icons/check.png"></image>
+    <image class="mark" src="../../assets/icons/schedule.png"></image>
 </view>
 
+      <view class="avatar-sm">
+        <image src="{{info.avatarUrl}}"></image>
+    <image class="mark" src="../../assets/icons/showing.png"></image>
+</view>
   </view>
   </view>
 
@@ -29,7 +33,7 @@
   </view>
 
   <view class="block-image">
-    <image class="button-image" src="../../assets/icons/button_red.png"></image>
+    <image class="button-image" src="../../assets/icons/button_gray.png"></image>
   </view>
 
 </view>

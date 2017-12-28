@@ -14,7 +14,7 @@
 }
 
 .main-image {
-  width: 400rpx;
+  width: 500rpx;
   height: 500rpx;
   margin: auto;
 }
