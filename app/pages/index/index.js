@@ -94,6 +94,7 @@ Page({
           'gui.shower_mrk': assets.marks.empty
         })
         that.start_clock()
+        that.start_token_timer()
         that.start_flasher()
 
         // if reservation available, change button color
@@ -112,6 +113,7 @@ Page({
           'gui.clock': "",
         })
         that.end_flasher()
+        that.end_token_timer()
         that.end_clock()
       }
     })
@@ -179,4 +181,19 @@ Page({
     clearInterval(this.flasher_interv)
     this.setData({ 'gui.shower_mrk': assets.marks.using })
   },
+
+  // start timer for bathroom user
+  start_token_timer: function () {
+    var that = this
+    this.token_timer = setInterval(function () {
+      const currTime = utils.newDate()
+      if (currTime - that.data.status.token_time > settings.time.token_interval) {
+        // if token being kept more than an interval, all users send force-token return command
+        that.sendRequest('force-return')
+      }
+    }, settings.time.clock_interval)
+  },
+  end_token_timer: function() {
+    clearInterval(this.token_timer)
+  }
 })
