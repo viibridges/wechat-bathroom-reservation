@@ -100,9 +100,11 @@ class TokenManager():
       self.token_userId = False
       self.token_time = -1
       broadcast_decision = True
+      # if someone reserved the token, start the reservation timer (initialize the timestamp)
+      if self.findUser(lambda x: x['reserving']):
+        self.reserve_time = utils.secsfrom1970()
 
     elif request_type is self._requestTypes['acquire']:
-      # if token is available, then assign token to user
       self.token_userId = userId
       self.token_time = utils.secsfrom1970()
       userInfo['acquiring'] = True  # record keeping the token
@@ -114,10 +116,8 @@ class TokenManager():
       broadcast_decision = True
 
     elif request_type is self._requestTypes['reserve']:
-      # if token was assign but reservation is open then reserve token
       userInfo['reserving'] = True  # record reserving the token
       self.reserve_userId = userId
-      self.reserve_time = utils.secsfrom1970()
       broadcast_decision = True
 
     elif request_type is self._requestTypes['cancel']:
@@ -134,9 +134,13 @@ class TokenManager():
     return broadcast_decision
 
 
-  def envelop_message(self):
+  def envelop_message(self, request_message):
     """ envelop the class information to send """
+    request_type, userId, userInfo = self.parse_request(request_message)
+
     data = {
+      'request_userId': userId,
+      'request_type': request_type,
       'token_time': self.token_time,
       'reserve_time': self.reserve_time,
       'userList': self.userList,

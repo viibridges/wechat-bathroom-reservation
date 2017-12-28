@@ -12,7 +12,7 @@ async def time(websocket, path):
     request = await websocket.recv()
     broadcast = manager.process_request(request)
     if broadcast:
-      message = manager.envelop_message()
+      message = manager.envelop_message(request)
       await websocket.send(message)
 
 
