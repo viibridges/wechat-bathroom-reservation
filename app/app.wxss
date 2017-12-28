@@ -5,6 +5,7 @@
   flex-direction: column;
   align-items: left;
   justify-content: space-between;
-  padding: 0 5%;
+  padding: 200rpx 5%;
+  background-color: antiquewhite;
   box-sizing: border-box;
-} 
+}  

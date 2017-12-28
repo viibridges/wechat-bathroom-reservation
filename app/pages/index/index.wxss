@@ -1,6 +1,73 @@
 /**index.wxss**/
 
-.status {
+.main {
+  height: 10000rpx;
+}
+
+.bg-color-0 {
+  background-color: blueviolet;
+}
+
+.block-image {
+  display: flex;
+  margin: auto;
+  flex-direction: column;
+}
+
+.main-image {
+  width: 400rpx;
+  height: 500rpx;
+  margin: auto;
+}
+
+.time-display {
+  display: flex;
+  margin: auto;
+}
+
+.time-display text {
+  font-size: 50rpx;
+  color: ghostwhite;
+  margin: auto;
+}
+
+text {
+  font-size: 40rpx;
+  color: ghostwhite;
+  margin: auto;
+}
+
+.user-list {
+  margin-left: 5%;
+  margin-top: 5%;
+}
+
+.avatar-sm {
+  width: 90rpx;
+  height: 90rpx;
+  margin-right: 5rpx;
+  margin-top: 20rpx;
+  border-radius: 10%;
+}
+
+.button-image {
+  width: 300rpx;
+  height: 300rpx;
+  margin: auto;
+}
+
+.br-image {
+  display: flex;
+  margin: auto;
+}
+.br-image image {
+  width: 95%;
+  height:50rpx;
+  margin: auto;
+  margin-bottom: 20rpx;
+}
+
+/* .status {
   padding: 5% 0 50% 0;
 }
 
@@ -27,4 +94,4 @@
 }
 .inuse-color {
   background: red;
-}
+} */
