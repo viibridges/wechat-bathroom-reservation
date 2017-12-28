@@ -10,7 +10,7 @@ class TokenManager():
   when receiving request from the clients
   """
   def __init__(self):
-    self._requestTypes = {'return': 0, 'aquire': 1, 'reserve': 2, 'update': 3}
+    self._requestTypes = {'return': 0, 'acquire': 1, 'reserve': 2, 'update': 3}
     self.userList = {}
 
     self.token_time = -1    # timestamp when token is assign
@@ -35,7 +35,7 @@ class TokenManager():
     broadcast_decision = False
     if userId not in self.userList:
       userInfo['reserving'] = False
-      userInfo['aquiring'] = False
+      userInfo['acquiring'] = False
       userInfo['returns'] = 0
       self.userList.update({userId: userInfo})
       broadcast_decision = True
@@ -51,8 +51,8 @@ class TokenManager():
     #
     # stop log ill logics
     # 
-    if self.token_userId and request_type == self._requestTypes['aquire']:
-      print("can't aquire when somebody is keeping it.")
+    if self.token_userId and request_type == self._requestTypes['acquire']:
+      print("can't acquire when somebody is keeping it.")
       return broadcast_decision
     if self.reserve_userId and request_type == self._requestTypes['reserve']:
       print("can't reserve when somebody has already reserved.")
@@ -73,18 +73,18 @@ class TokenManager():
     #
     if False: pass
     elif request_type is self._requestTypes['return']:
-      userInfo['returns'] += 1   # record a completed aquiring
-      userInfo['aquiring'] = False
+      userInfo['returns'] += 1   # record a completed acquiring
+      userInfo['acquiring'] = False
       self.token_userId = False
       self.token_time = -1
       broadcast_decision = True
 
-    elif request_type is self._requestTypes['aquire']:
+    elif request_type is self._requestTypes['acquire']:
       # if token is available, then assign token to user
       self.token_userId = userId
       self.token_time = utils.secsfrom1970()
-      userInfo['aquiring'] = True  # record keeping the token
-      # if aquire request from reserve user, then reset reserve time and reserve_user
+      userInfo['acquiring'] = True  # record keeping the token
+      # if acquire request from reserve user, then reset reserve time and reserve_user
       if userId == self.reserve_userId: 
         self.reserve_userId = False # release reservation
         self.reserve_time = -1
