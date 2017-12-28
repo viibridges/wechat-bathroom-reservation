@@ -5,7 +5,7 @@
 }
 
 .bg-color-0 {
-  background-color: blueviolet;
+  background-color: dodgerblue;
 }
 
 .block-image {
@@ -20,6 +20,7 @@
 }
 
 .time-display {
+  height: 70rpx;
   display: flex;
   margin: auto;
 }
@@ -54,11 +55,13 @@ text {
   border-radius: 10%;
   z-index: 1;
 }
+
 .avatar-sm image {
   position: absolute;
   width: 90rpx;
   height: 90rpx;
 }
+
 .mark {
   position: relative;
   z-index: 2;
@@ -81,32 +84,3 @@ text {
   margin: auto;
   margin-bottom: 20rpx;
 }
-
-/* .status {
-  padding: 5% 0 50% 0;
-}
-
-.avatar-sm {
-  width: 90rpx;
-  height: 90rpx;
-  margin: 5rpx;
-  border-radius: 10%;
-}
-
-.finish-list {
-  flex-direction: row;
-  align-items: left;
-  margin-top: 3%;
-}
-
-.request-button {
-  width: 256rpx;
-  margin-top: 15%;
-  text-align: center;
-}
-.available-color {
-  background: aqua;
-}
-.inuse-color {
-  background: red;
-} */

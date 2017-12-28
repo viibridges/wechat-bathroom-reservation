@@ -19,7 +19,14 @@ Page({
       reserve_userId: false,
       token_time: -1,
       reserve_time: -1,
-      clock: ""         // clock string to display
+    },
+
+    // GUI elements
+    gui: {
+      bg_color: "",
+      clock: "",
+      main_img: "",
+      button_img: "",
     },
 
     debug_str: ""
@@ -32,9 +39,13 @@ Page({
       this.sendRequest('aquire')
     }
     else {
-      this.sendRequest('return')     // try return the key
-      if (!status.reserve_userId) {  // bathroom in used and no one reserve
-        this.sendRequest('reserve')
+      if (this.data.userId == this.data.status.token_userId) {
+        this.sendRequest('return')     // try return the key if have it
+      }
+      else {
+        if (!status.reserve_userId) {  // bathroom in used and no one reserve
+          this.sendRequest('reserve')
+        }
       }
     }
   },
@@ -67,10 +78,28 @@ Page({
         'status.reserve_time': status['reserve_time']
       })
 
-      if (that.data.token_time != -1) {
+      // when bathroom is in use
+      if (that.data.status.token_userId) {
+        // set background color
+        that.setData({
+          'gui.bg_color': "blueviolet",
+          'main_img': "../../assets/icons/shower.png",
+          'button_img': "../../assets/icons/button_red.png",
+        })
         that.start_clock()
+        // if reservation available, change button color
+        that.setData({
+          'button_img': "../../assets/icons/button_orange.png",
+        })
       }
+      // when bathroom is available
       else {
+        that.setData({
+          'gui.bg_color': "dodgerblue",
+          'main_img': "../../assets/icons/shower-waterless.png",
+          'button_img': "../../assets/icons/button_green.png",
+          'gui.clock': "",
+        })
         that.end_clock()
       }
     })
@@ -88,16 +117,14 @@ Page({
   // start counter
   start_clock: function () {
     var that = this
-    this.setData({ 'status.clock': utils.formatTime(0) }) // set to 00:00:00
+    this.setData({ 'gui.clock': utils.formatTime(0) }) // set to 00:00:00
     this.interval = setInterval(function () {
       const currTime = utils.newDate()
-      that.setData({ 'status.clock': utils.formatTime(currTime - that.data.status.token_time) })
+      that.setData({ 'gui.clock': utils.formatTime(currTime - that.data.status.token_time) })
     }, 1000)
   },
 
   end_clock: function () {
-    if (typeof this.interval !== 'undefined') {
-      clearInterval(this.interval)
-    }
+    clearInterval(this.interval)
   },
 })

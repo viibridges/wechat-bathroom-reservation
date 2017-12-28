@@ -1,64 +1,39 @@
 <!--index.wxml-->
-<view class="main bg-color-0">
+<view class="main" style="background-color: {{gui.bg_color}}">
 
   <view class="block-image">
-    <image class="main-image" src="../../assets/icons/shower.png"></image>
+    <image class="main-image" src="{{main_img}}"></image>
   </view>
 
   <view class="time-display">
-    <text>{{status.clock}}</text>
+    <text>{{gui.clock}}</text>
   </view>
 
-<view class="user-list">
-  <text>整整齐齐一家人</text>
-  <view class="finish-list" wx:for="{{status.userList}}" wx:for-item="info" wx:key="idx">
-  <view class="avatar-sm">
-    <image src="{{info.avatarUrl}}"></image>
-    <image class="mark" src="../../assets/icons/check.png"></image>
+  <view class="user-list">
+    <text>整整齐齐一家人</text>
+    <view class="finish-list" wx:for="{{status.userList}}" wx:for-item="info" wx:key="idx">
+      <view class="avatar-sm">
+        <image src="{{info.avatarUrl}}"></image>
+        <image class="mark" src="../../assets/icons/check.png"></image>
+      </view>
+      <view class="avatar-sm">
+        <image src="{{info.avatarUrl}}"></image>
+        <image class="mark" src="../../assets/icons/schedule.png"></image>
+      </view>
+
+      <view class="avatar-sm">
+        <image src="{{info.avatarUrl}}"></image>
+        <image class="mark" src="../../assets/icons/showing.png"></image>
+      </view>
     </view>
-      <view class="avatar-sm">
-        <image src="{{info.avatarUrl}}"></image>
-    <image class="mark" src="../../assets/icons/schedule.png"></image>
-</view>
-
-      <view class="avatar-sm">
-        <image src="{{info.avatarUrl}}"></image>
-    <image class="mark" src="../../assets/icons/showing.png"></image>
-</view>
-  </view>
   </view>
 
   <view class="br-image">
-  <image src="../../assets/icons/br.png"></image>
+    <image src="../../assets/icons/br.png"></image>
   </view>
 
   <view class="block-image">
-    <image class="button-image" src="../../assets/icons/button_gray.png"></image>
+    <image class="button-image" src="{{button_img}}" bindtap="reserveTap"></image>
   </view>
 
 </view>
-
-
-
-<!-- <view class="status">
-    <text wx:if="{{status.token_userId}}">{{userInfo.nickName}} is taking shower...</text>
-    <text wx:else>bathroom is available</text>
-
-    <view></view>
-
-    <text wx:if="{{status.reserve_userId}}">{{userInfo.nickName}} reserved</text>
-    <text wx:else>the reservation is available</text>
-  </view>
-
-  <!-- <view>
-    <text>debug: {{debug_str}}</text>
-  </view> -->
-
-<!-- <text>All Users:</text>
-
-  <view class="finish-list" wx:for="{{status.userList}}" wx:for-item="info" wx:key="idx">
-    <image class="avatar-sm" src="{{info.avatarUrl}}"></image>
-  </view>
-
-  <button class="request-button available-color" bindtap='reserveTap' wx:if="{{!status.token_userId}}">Available</button>
-  <button class="request-button inuse-color" bindtap='reserveTap' wx:else>{{status.clock}}</button> -->
