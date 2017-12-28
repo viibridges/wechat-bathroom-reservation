@@ -32,8 +32,6 @@ Page({
       shower_mrk: "",
       user_list: [],
     },
-
-    debug_str: ""
   },
 
   //事件处理函数
@@ -91,7 +89,7 @@ Page({
       if (that.data.status.token_userId) {
         that.setData({
           'gui.bg_color': settings.colors.bg.inuse,
-          'gui.main_img': assets.bathroom.available,
+          'gui.main_img': assets.bathroom.inuse,
           'gui.button_img': assets.buttons.green,
           'gui.shower_mrk': assets.marks.empty
         })
@@ -132,14 +130,21 @@ Page({
     var user_list = []
     for (var key in userList) {
       const value = userList[key]
-      var user = { avatar: value.avatarUrl}
-      if (false) {}
-      else if (value.acquiring) { user.mark = assets.marks.using }
+      var user = { avatar: value.avatarUrl, flash: false, display: true }
+      if (false) { }
+      else if (value.acquiring) { user.mark = assets.marks.using; user.flash = true }
       else if (value.reserving) { user.mark = assets.marks.reserve }
-      else if (value.returns)   { user.mark = assets.marks.check }
-      else { user.mark = assets.marks.empty}
+      else if (value.returns) { user.mark = assets.marks.check }
+      else { user.mark = assets.marks.empty }
       user_list.push(user)
     }
+
+    // DEBUG ONLY >>>>>
+    const value = userList[key]
+    user_list.push({ avatar: value.avatarUrl, mark: assets.marks.reserve, flash: true, display: true })
+    user_list.push({ avatar: value.avatarUrl, mark: assets.marks.check, flash: false, display: true })
+    // DEBUG ONLY <<<<<
+
     return user_list
   },
 
@@ -159,15 +164,15 @@ Page({
   // start flasher
   start_flasher: function () {
     var that = this
-    var flash = false
+    var display = false
     this.flasher_interv = setInterval(function () {
-      if (flash) {
-        that.setData({ 'gui.shower_mrk': assets.marks.using })
+      for (var idx in that.data.gui.user_list) {
+        const flash = that.data.gui.user_list[idx].flash
+        // 蛋疼的数组设置
+        const key = "gui.user_list[" + idx + "].display"
+        if (flash) { that.setData({ [key]: display }) }
       }
-      else {
-        that.setData({ 'gui.shower_mrk': assets.marks.empty })
-      }
-      flash = !flash
+      display = !display
     }, settings.time.flash_interval)
   },
   end_flasher: function () {

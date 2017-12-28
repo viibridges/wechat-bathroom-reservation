@@ -9,28 +9,13 @@
     <text>{{gui.clock}}</text>
   </view>
 
+
+  <text>整整齐齐一家人</text>
   <view class="user-list">
-    <text>整整齐齐一家人</text>
-    <view class="finish-list" wx:for="{{status.userList}}" wx:for-item="info" wx:key="idx">
-      <view class="avatar-sm">
-        <image src="{{info.avatarUrl}}"></image>
-        <image class="mark" src="../../assets/icons/check.png"></image>
-      </view>
-      <view class="avatar-sm">
-        <image src="{{info.avatarUrl}}"></image>
-        <image class="mark" src="../../assets/icons/schedule.png"></image>
-      </view>
-
-      <view class="avatar-sm">
-        <image src="{{info.avatarUrl}}"></image>
-        <image class="mark" src="{{gui.shower_mrk}}"></image>
-      </view>
-    </view>
-
     <view class="finish-list" wx:for="{{gui.user_list}}" wx:for-item="user" wx:key="idx">
       <view class="avatar-sm">
         <image src="{{user.avatar}}"></image>
-        <image class="mark" src="{{user.mark}}"></image>
+        <image class="mark" hidden="{{!user.display}}" src="{{user.mark}}"></image>
       </view>
     </view>
 
