@@ -3,8 +3,9 @@
 import asyncio, datetime, websockets
 from token_manager import TokenManager
 
+manager = TokenManager()
 async def time(websocket, path):
-  manager = TokenManager()
+  global manager
   while True:
     # now = datetime.datetime.utcnow().isoformat() + 'Z'
     # await websocket.send(json.dumps({"now": now}))
