@@ -17,7 +17,7 @@ async def time(websocket, path):
 
 
 if __name__ == '__main__':
-  start_server = websockets.serve(time, '192.168.56.1', 5678)
+  start_server = websockets.serve(time, '128.163.154.220', 5678)
 
   asyncio.get_event_loop().run_until_complete(start_server)
   asyncio.get_event_loop().run_forever()
