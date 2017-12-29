@@ -13,6 +13,13 @@ class TokenManager():
     self._requestTypes = {
       'return': 0, 'acquire': 1, 'reserve': 2, 'cancel': 3,
       'update': 4, 'force-return': 5, 'force-cancel': 6}
+
+    self.initialize_states()
+
+
+  def initialize_states(self):
+    self.request_userId = None
+    self.request_type = None
     self.userList = {}
 
     self.token_time = -1    # timestamp when token is assign
@@ -20,6 +27,10 @@ class TokenManager():
 
     self.token_userId = False
     self.reserve_userId = False
+
+
+  def reset(self):
+    self.initialize_states()
 
 
   def parse_request(self, message_raw):
@@ -31,15 +42,49 @@ class TokenManager():
     return request_type, userId, userInfo, timestamp
 
 
-  def findUser(self, condition):
+  def find_user(self, condition):
     # return userId from self.userList if meet condition(userInfo)
     for userId, userInfo in self.userList.items():
       if condition(userInfo): return userId
     return None
 
 
+  def isclearstates(self, timestamp):
+    """
+    Define rules here to clear the server states
+    """
+    hour_to_clear = 3  # clear states after this hour in the day
+
+    hour, minute, second = utils.parse_timestamp(timestamp)
+    try:
+      dH, dM, dS = utils.parse_timestamp(timestamp-self.hour_to_clear)
+    except:
+      # if this is the first start the server, hour_to_clear won't exist
+      # then return True to tell the class to clear the states
+
+      # set hour_to_clear to last hour_to_clear
+      offset_to_htc = (hour-hour_to_clear) * 60*60
+      self.hour_to_clear = timestamp - offset_to_htc
+      return True
+
+    # more than one day from last purge, return True
+    if dH > 24:
+      self.hour_to_clear = timestamp
+      return True
+    else:
+      return False
+
+
   def process_request(self, request_message):
     request_type, userId, userInfo, timestamp = self.parse_request(request_message)
+    self.request_type = request_type
+    self.request_userId = userId
+
+    # reset the server states (renew user list and everything) at some point in a day
+    if self.isclearstates(timestamp):
+      hour, minute, second = utils.parse_timestamp(timestamp)
+      print("Clear server states at {}:{}:{}".format(hour, minute, second))
+      self.reset()
 
     # add to user list if the request came from new user
     broadcast_decision = False
@@ -58,10 +103,10 @@ class TokenManager():
     #       may not be the user of interest, we need to change them for further editing
     if None: pass
     elif request_type == self._requestTypes['force-return']:
-      userId = self.findUser(lambda x: x['acquiring'])
+      userId = self.find_user(lambda x: x['acquiring'])
       request_type = self._requestTypes['return']  # pretend this is a normal request
     elif request_type == self._requestTypes['force-cancel']:
-      userId = self.findUser(lambda x: x['reserving'])
+      userId = self.find_user(lambda x: x['reserving'])
       request_type = self._requestTypes['cancel']  # pretend this is a normal request
 
     if not userId: 
@@ -111,7 +156,7 @@ class TokenManager():
       self.token_time = -1
       broadcast_decision = True
       # if someone reserved the token, start the reservation timer (initialize the timestamp)
-      if self.findUser(lambda x: x['reserving']):
+      if self.find_user(lambda x: x['reserving']):
         self.reserve_time = timestamp
 
     elif request_type is self._requestTypes['acquire']:
@@ -144,13 +189,11 @@ class TokenManager():
     return broadcast_decision
 
 
-  def envelop_message(self, request_message):
+  def envelop_message(self):
     """ envelop the class information to send """
-    request_type, userId, _, _ = self.parse_request(request_message)
-
     data = {
-      'request_userId': userId,
-      'request_type': request_type,
+      'request_userId': self.request_userId,
+      'request_type': self.request_type,
       'token_time': self.token_time,
       'reserve_time': self.reserve_time,
       'userList': self.userList,
