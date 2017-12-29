@@ -33,6 +33,12 @@ Page({
     },
   },
 
+  // times
+  clock_interv: null,
+  flasher_interv: null,
+  token_timer: null,
+  reserve_timer: null,
+
   //事件处理函数
   reserveTap: function () {
     var status = this.data.status
@@ -110,15 +116,16 @@ Page({
 
       //
       // clock, token timer and flasher logic
+      // Note: all the timers are coded in the way (in start_xxx) so that there can be only one instance exist at a time
+      //       the function end_xxx can handle the nonexist timer case, so you can call them anytime without causing trouble
       //
-      // if someone just managed to aquire the token, then start the clock, token timer and flasher
-      if (status['request_type'] == settings.request_types['acquire']) {
+      // if the bathroom is in use then launch those times
+      if (that.data.status.token_userId) { // if the bathroom is in use
         that.start_clock()
         that.start_flasher()
         that.start_token_timer()
       }
-      if (status['request_type'] == settings.request_types['return'] ||
-        status['request_type'] == settings.request_types['force-return']) {
+      else {
         that.end_token_timer()
         that.end_flasher()
         that.end_clock()
@@ -127,11 +134,8 @@ Page({
       //
       // reserve timer logic
       //
-      // if current the received message is 'force-cancel', than end the reservation timer
-      // if someone just returned the token and another someone has reserved the bathroom, start the reserve timer
-      if ((status['request_type'] == settings.request_types['return']
-        || status['request_type'] == settings.request_types['force-return'])
-        && that.data.status.reserve_userId) {
+      // if the bathroom is avalaible and someone reserves it, launch a reserve timer and the flasher
+      if (!that.data.status.token_userId && that.data.status.reserve_userId) {
         that.start_reserve_timer()
         // set schedule user mark flashable
         for (var idx in that.data.gui.user_list) {
@@ -139,7 +143,8 @@ Page({
         }
         that.start_flasher()
       }
-      if (status['request_type'] == settings.request_types['force-cancel']) {
+      // if the bathroom is avalaible and nobody reserves it, close the reserve timer and the flasher
+      if (!that.data.status.token_userId && !that.data.status.reserve_userId) {
         that.end_reserve_timer()
         that.end_flasher()
         // set schedule user marker back to false
@@ -192,8 +197,9 @@ Page({
 
   // start counter
   start_clock: function () {
+    if (this.clock_interv) return // can launch only one timer
     var that = this
-    this.setData({ 'gui.clock': utils.formatTime(0) }) // set to 00:00:00
+    // this.setData({ 'gui.clock': utils.formatTime(0) }) // set to 00:00:00
     this.clock_interv = setInterval(function () {
       const currTime = utils.newDate()
       that.setData({ 'gui.clock': utils.formatTime(currTime - that.data.status.token_time) })
@@ -201,10 +207,12 @@ Page({
   },
   end_clock: function () {
     clearInterval(this.clock_interv)
+    this.clock_interv = null
   },
 
   // start flasher
   start_flasher: function () {
+    if (this.flash_interval) return // can launch only one timer
     var that = this
     var display = false
     this.flasher_interv = setInterval(function () {
@@ -219,6 +227,7 @@ Page({
   },
   end_flasher: function () {
     clearInterval(this.flasher_interv)
+    this.flasher_interv = null
     // set all display in gui_userlist back to true
     for (var idx in this.data.gui.user_list) {
       const key = "gui.user_list[" + idx + "].display"
@@ -228,6 +237,7 @@ Page({
 
   // start timer for bathroom user
   start_token_timer: function () {
+    if (this.token_timer) return // can launch only one timer
     var that = this
     this.token_timer = setInterval(function () {
       const currTime = utils.newDate()
@@ -239,10 +249,12 @@ Page({
   },
   end_token_timer: function () {
     clearInterval(this.token_timer)
+    this.token_timer = null
   },
 
   // start timer for reserver
   start_reserve_timer: function () {
+    if (this.reserve_timer) return // can launch only one timer
     var that = this
     this.reserve_timer = setInterval(function () {
       const currTime = utils.newDate()
@@ -254,5 +266,6 @@ Page({
   },
   end_reserve_timer: function () {
     clearInterval(this.reserve_timer)
+    this.reserve_timer = null
   },
 })
