@@ -14,7 +14,7 @@
   <view class="user-list">
     <view class="finish-list" wx:for="{{gui.user_list}}" wx:for-item="user" wx:key="idx">
       <view class="avatar-sm">
-        <image src="{{user.avatar}}"></image>
+        <image class="thumb" src="{{user.avatar}}"></image>
         <image class="mark" hidden="{{!user.display}}" src="{{user.mark}}"></image>
       </view>
     </view>

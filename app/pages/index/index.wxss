@@ -55,19 +55,23 @@ text {
   height: 90rpx;
   margin-right: 15rpx;
   margin-top: 20rpx;
-  border-radius: 10%;
   z-index: 1;
+  display: flex;
 }
 
-.avatar-sm image {
+.avatar-sm .thumb {
   position: absolute;
   width: 90rpx;
   height: 90rpx;
+  border-radius: 15%;
 }
 
-.mark {
+.avatar-sm .mark {
   position: relative;
+  width: 70rpx;
+  height: 70rpx;  
   z-index: 2;
+  margin: auto;
 }
 
 .button-image {
