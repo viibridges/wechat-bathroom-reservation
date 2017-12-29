@@ -162,7 +162,7 @@ Page({
   sendRequest: function (req) {
     const message = {
       'request': settings.request_types[req],
-      'uniqueId': this.data.userId + req,
+      'uniqueId': this.data.userId,
       'userInfo': this.data.userInfo,
       'timestamp': utils.newDate(),
     };
@@ -212,7 +212,7 @@ Page({
 
   // start flasher
   start_flasher: function () {
-    if (this.flash_interval) return // can launch only one timer
+    if (this.flasher_interv) return // can launch only one timer
     var that = this
     var display = false
     this.flasher_interv = setInterval(function () {

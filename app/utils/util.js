@@ -1,4 +1,4 @@
-const formatTime = function(date) {
+const formatTime = function (date) {
   const second = Math.floor(date % 60)
   date = date / 60
   const minute = Math.floor(date % 60)
@@ -8,26 +8,27 @@ const formatTime = function(date) {
   return [hour, minute, second].map(formatNumber).join(':')
 }
 
-const formatNumber = function(n) {
+const formatNumber = function (n) {
   n = n.toString()
   return n[1] ? n : '0' + n
 }
 
-const newDate = function() {
-  const date = new Date()
+const newDate = function () {
+  const localoffset = -(new Date().getTimezoneOffset() / 60);
+  const date = new Date(new Date().getTime() + localoffset * 3600 * 1000)
   return date.getTime() / 1000
 }
 
-const hashCode = function(s) {
+const hashCode = function (s) {
   return s.split("").reduce(function (a, b) { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0);
 }
 
-const generateUserId = function(userInfo) {
+const generateUserId = function (userInfo) {
   // generate userId from user info, user openID in the future
   return hashCode(userInfo.avatarUrl)
 }
 
-const clone = function(obj) {
+const clone = function (obj) {
   return JSON.parse(JSON.stringify(obj))
 }
 
