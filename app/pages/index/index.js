@@ -97,12 +97,9 @@ Page({
         that.start_token_timer()
         that.start_flasher()
 
-        // if reservation available, change button color
-        if (!that.data.status.reserve_userId) {
-          that.setData({
-            'gui.button_img': assets.buttons.orange,
-          })
-        }
+        if (!that.data.status.reserve_userId) { that.setData({ 'gui.button_img': assets.buttons.orange, }) }
+        else { that.setData({ 'gui.button_img': assets.buttons.gray, }) }
+
       }
       // when bathroom is available
       else {
