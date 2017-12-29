@@ -93,3 +93,29 @@ text {
   margin: auto;
   margin-bottom: 20rpx;
 }
+
+.inuse {
+  padding-top: 40%;
+  padding-bottom: 800rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.inuse text {
+  font-size: 110rpx;
+  font-weight: 600;
+  color: ivory;
+  margin-left: auto;
+}
+
+.hint {
+  display: flex;
+  margin-top: 150rpx;
+}
+
+.hint text {
+  font-size: 70rpx;
+  font-weight: bold;
+  color: #ddd;
+  margin: auto;
+}

@@ -1,5 +1,5 @@
 <!--index.wxml-->
-<view class="main" style="background-color: {{gui.bg_color}}">
+<view class="main" style="background-color: {{gui.bg_color}}" wx:if="{{userId != status.token_userId}}">
 
   <view class="block-image">
     <image class="main-image" src="{{gui.main_img}}"></image>
@@ -30,4 +30,13 @@
     <image class="button-image" src="{{gui.button_img}}" bindtap="reserveTap"></image>
   </view>
 
+</view>
+<view class="inuse" style="background-color: {{gui.bg_color}}" bindtap="reserveTap" wx:else>
+  <view class="time-display">
+    <text>{{gui.clock}}</text>
+  </view>
+
+  <view class="hint">
+    <text>TAP TO END</text>
+  </view>
 </view>

@@ -155,7 +155,7 @@ Page({
   // User Methods
   //
   sendRequest: function (req) {
-    const message = { 'request': settings.request_types[req], 'uniqueId': this.data.userId + req, 'userInfo': this.data.userInfo };
+    const message = { 'request': settings.request_types[req], 'uniqueId': this.data.userId, 'userInfo': this.data.userInfo };
     this.data.socket.send(message)
   },
 
