@@ -7,9 +7,7 @@ module.exports = {
   },
   buttons: {
     green: "../../assets/icons/button_green.png",
-    red: "../../assets/icons/button_red.png",
     blue: "../../assets/icons/button_blue.png",
-    orange: "../../assets/icons/button_orange.png",
     gray: "../../assets/icons/button_gray.png",
   },
   marks: {

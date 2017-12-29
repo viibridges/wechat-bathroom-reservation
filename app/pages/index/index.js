@@ -29,7 +29,6 @@ Page({
       clock: "",
       main_img: assets.bathroom.available,
       button_img: assets.buttons.green,
-      shower_mrk: assets.marks.empty,
       user_list: [],
     },
   },
@@ -91,10 +90,9 @@ Page({
           'gui.bg_color': settings.colors.bg.inuse,
           'gui.main_img': assets.bathroom.inuse,
           'gui.button_img': assets.buttons.green,
-          'gui.shower_mrk': assets.marks.empty
         })
 
-        if (!that.data.status.reserve_userId) { that.setData({ 'gui.button_img': assets.buttons.orange, }) }
+        if (!that.data.status.reserve_userId) { that.setData({ 'gui.button_img': assets.buttons.blue, }) }
         else { that.setData({ 'gui.button_img': assets.buttons.gray, }) }
 
       }
@@ -104,7 +102,7 @@ Page({
           'gui.bg_color': settings.colors.bg.available,
           'gui.main_img': assets.bathroom.available,
           'gui.button_img': assets.buttons.green,
-          'gui.clock': "OPEN",
+          'gui.clock': "AVAILABLE",
         })
       }
 
@@ -117,7 +115,7 @@ Page({
         that.start_flasher()
         that.start_token_timer()
       }
-      if (status['request_type'] == settings.request_types['return'] || 
+      if (status['request_type'] == settings.request_types['return'] ||
         status['request_type'] == settings.request_types['force-return']) {
         that.end_token_timer()
         that.end_flasher()
@@ -128,11 +126,25 @@ Page({
       // reserve timer logic
       //
       // if current the received message is 'force-cancel', than end the reservation timer
-      if (status['request_type'] == settings.request_types['force-cancel']){that.end_reserve_timer()}
       // if someone just returned the token and another someone has reserved the bathroom, start the reserve timer
-      if ((status['request_type'] == settings.request_types['return'] 
-      || status['request_type'] == settings.request_types['force-return'])
-       && that.data.status.reserve_userId) { that.start_reserve_timer()  }
+      if ((status['request_type'] == settings.request_types['return']
+        || status['request_type'] == settings.request_types['force-return'])
+        && that.data.status.reserve_userId) {
+        that.start_reserve_timer()
+        // set schedule user mark flashable
+        for (var idx in that.data.gui.user_list) {
+          if (that.data.gui.user_list[idx].reserving) { that.data.gui.user_list[idx].flash = true}
+        }
+        that.start_flasher()
+      }
+      if (status['request_type'] == settings.request_types['force-cancel']) {
+        that.end_reserve_timer()
+        that.end_flasher()
+        // set schedule user marker back to false
+        for (var idx in that.data.gui.user_list) {
+          if (that.data.gui.user_list[idx].reserving) { that.data.gui.user_list[idx].flash = false }
+        }
+      }
 
     })
   },
@@ -141,7 +153,7 @@ Page({
   // User Methods
   //
   sendRequest: function (req) {
-    const message = { 'request': settings.request_types[req], 'uniqueId': this.data.userId, 'userInfo': this.data.userInfo };
+    const message = { 'request': settings.request_types[req], 'uniqueId': this.data.userId + req, 'userInfo': this.data.userInfo };
     this.data.socket.send(message)
   },
 
@@ -150,7 +162,10 @@ Page({
     var user_list = []
     for (var key in userList) {
       const value = userList[key]
-      var user = { avatar: value.avatarUrl, flash: false, display: true }
+      var user = {
+        avatar: value.avatarUrl, flash: false, display: true,
+        acquiring: value.acquiring, reserving: value.reserving, returns: value.returns,
+      }
       if (false) { }
       else if (value.acquiring) { user.mark = assets.marks.using; user.flash = true }
       else if (value.reserving) { user.mark = assets.marks.reserve }
@@ -160,9 +175,9 @@ Page({
     }
 
     // DEBUG ONLY >>>>>
-    //const value = userList[key]
-    //user_list.push({ avatar: value.avatarUrl, mark: assets.marks.reserve, flash: true, display: true })
-    //user_list.push({ avatar: value.avatarUrl, mark: assets.marks.check, flash: false, display: true })
+    // const value = userList[key]
+    // user_list.push({ avatar: value.avatarUrl, mark: assets.marks.reserve, flash: true, display: true })
+    // user_list.push({ avatar: value.avatarUrl, mark: assets.marks.check, flash: false, display: true })
     // DEBUG ONLY <<<<<
 
     return user_list
@@ -170,7 +185,6 @@ Page({
 
   // start counter
   start_clock: function () {
-    console.log('start clock')
     var that = this
     this.setData({ 'gui.clock': utils.formatTime(0) }) // set to 00:00:00
     this.clock_interv = setInterval(function () {
@@ -179,13 +193,11 @@ Page({
     }, settings.time.clock_interval)
   },
   end_clock: function () {
-    console.log('destroy clock')
     clearInterval(this.clock_interv)
   },
 
   // start flasher
   start_flasher: function () {
-    console.log('start flasher')
     var that = this
     var display = false
     this.flasher_interv = setInterval(function () {
@@ -199,13 +211,16 @@ Page({
     }, settings.time.flash_interval)
   },
   end_flasher: function () {
-    console.log('destroy flasher')
     clearInterval(this.flasher_interv)
+    // set all display in gui_userlist back to true
+    for (var idx in this.data.gui.user_list) {
+      const key = "gui.user_list[" + idx + "].display"
+      this.setData({ [key]: true })
+    }
   },
 
   // start timer for bathroom user
   start_token_timer: function () {
-    console.log('start token')
     var that = this
     this.token_timer = setInterval(function () {
       const currTime = utils.newDate()
@@ -216,13 +231,11 @@ Page({
     }, settings.time.clock_interval)
   },
   end_token_timer: function () {
-    console.log('destroy token')
     clearInterval(this.token_timer)
   },
 
   // start timer for reserver
   start_reserve_timer: function () {
-    console.log('start reserve')
     var that = this
     this.reserve_timer = setInterval(function () {
       const currTime = utils.newDate()
@@ -233,7 +246,6 @@ Page({
     }, settings.time.clock_interval)
   },
   end_reserve_timer: function () {
-    console.log('destroy reserve')
     clearInterval(this.reserve_timer)
   },
 })

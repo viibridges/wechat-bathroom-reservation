@@ -18,6 +18,6 @@ module.exports = {
     clock_interval: 1000,  // in milliseconds
     flash_interval: 450,   // in milliseconds
     token_interval: 10,     // maximun time that the token can be kept
-    reserve_interval: 3,   // maximun time a reservation is in effect after bathroom is available
+    reserve_interval: 10,   // maximun time a reservation is in effect after bathroom is available
   },
 }
