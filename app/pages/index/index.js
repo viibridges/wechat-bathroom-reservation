@@ -93,9 +93,6 @@ Page({
           'gui.button_img': assets.buttons.green,
           'gui.shower_mrk': assets.marks.empty
         })
-        that.start_clock()
-        that.start_token_timer()
-        that.start_flasher()
 
         if (!that.data.status.reserve_userId) { that.setData({ 'gui.button_img': assets.buttons.orange, }) }
         else { that.setData({ 'gui.button_img': assets.buttons.gray, }) }
@@ -109,8 +106,21 @@ Page({
           'gui.button_img': assets.buttons.green,
           'gui.clock': "OPEN",
         })
-        that.end_flasher()
+      }
+
+      //
+      // clock, token timer and flasher logic
+      //
+      // if someone just managed to aquire the token, then start the clock, token timer and flasher
+      if (status['request_type'] == settings.request_types['acquire']) {
+        that.start_clock()
+        that.start_flasher()
+        that.start_token_timer()
+      }
+      if (status['request_type'] == settings.request_types['return'] || 
+        status['request_type'] == settings.request_types['force-return']) {
         that.end_token_timer()
+        that.end_flasher()
         that.end_clock()
       }
 
@@ -120,9 +130,9 @@ Page({
       // if current the received message is 'force-cancel', than end the reservation timer
       if (status['request_type'] == settings.request_types['force-cancel']){that.end_reserve_timer()}
       // if someone just returned the token and another someone has reserved the bathroom, start the reserve timer
-      if (status['request_type'] == settings.request_types['return'] &&
-       status['request_type'] == settings.request_types['force-return'] && that.data.status.reserve_userId)
-      { that.start_reserve_timer()  }
+      if ((status['request_type'] == settings.request_types['return'] 
+      || status['request_type'] == settings.request_types['force-return'])
+       && that.data.status.reserve_userId) { that.start_reserve_timer()  }
 
     })
   },
@@ -150,9 +160,9 @@ Page({
     }
 
     // DEBUG ONLY >>>>>
-    const value = userList[key]
-    user_list.push({ avatar: value.avatarUrl, mark: assets.marks.reserve, flash: true, display: true })
-    user_list.push({ avatar: value.avatarUrl, mark: assets.marks.check, flash: false, display: true })
+    //const value = userList[key]
+    //user_list.push({ avatar: value.avatarUrl, mark: assets.marks.reserve, flash: true, display: true })
+    //user_list.push({ avatar: value.avatarUrl, mark: assets.marks.check, flash: false, display: true })
     // DEBUG ONLY <<<<<
 
     return user_list
@@ -160,6 +170,7 @@ Page({
 
   // start counter
   start_clock: function () {
+    console.log('start clock')
     var that = this
     this.setData({ 'gui.clock': utils.formatTime(0) }) // set to 00:00:00
     this.clock_interv = setInterval(function () {
@@ -168,11 +179,13 @@ Page({
     }, settings.time.clock_interval)
   },
   end_clock: function () {
+    console.log('destroy clock')
     clearInterval(this.clock_interv)
   },
 
   // start flasher
   start_flasher: function () {
+    console.log('start flasher')
     var that = this
     var display = false
     this.flasher_interv = setInterval(function () {
@@ -186,12 +199,13 @@ Page({
     }, settings.time.flash_interval)
   },
   end_flasher: function () {
+    console.log('destroy flasher')
     clearInterval(this.flasher_interv)
-    this.setData({ 'gui.shower_mrk': assets.marks.using })
   },
 
   // start timer for bathroom user
   start_token_timer: function () {
+    console.log('start token')
     var that = this
     this.token_timer = setInterval(function () {
       const currTime = utils.newDate()
@@ -201,12 +215,14 @@ Page({
       }
     }, settings.time.clock_interval)
   },
-  end_token_timer: function() {
+  end_token_timer: function () {
+    console.log('destroy token')
     clearInterval(this.token_timer)
   },
 
   // start timer for reserver
   start_reserve_timer: function () {
+    console.log('start reserve')
     var that = this
     this.reserve_timer = setInterval(function () {
       const currTime = utils.newDate()
@@ -217,6 +233,7 @@ Page({
     }, settings.time.clock_interval)
   },
   end_reserve_timer: function () {
+    console.log('destroy reserve')
     clearInterval(this.reserve_timer)
   },
 })
