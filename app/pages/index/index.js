@@ -104,6 +104,8 @@ Page({
           'gui.button_img': assets.buttons.green,
           'gui.clock': "AVAILABLE",
         })
+        // if reserved, change the text
+        if (that.data.status.reserve_userId) { that.setData({ 'gui.clock': "RESERVED", }) }
       }
 
       //
@@ -133,7 +135,7 @@ Page({
         that.start_reserve_timer()
         // set schedule user mark flashable
         for (var idx in that.data.gui.user_list) {
-          if (that.data.gui.user_list[idx].reserving) { that.data.gui.user_list[idx].flash = true}
+          if (that.data.gui.user_list[idx].reserving) { that.data.gui.user_list[idx].flash = true }
         }
         that.start_flasher()
       }
