@@ -27,7 +27,8 @@ class TokenManager():
     request_type = request['request']
     userId = request['uniqueId']
     userInfo = request['userInfo']
-    return request_type, userId, userInfo
+    timestamp = request['timestamp']
+    return request_type, userId, userInfo, timestamp
 
 
   def findUser(self, condition):
@@ -38,7 +39,7 @@ class TokenManager():
 
 
   def process_request(self, request_message):
-    request_type, userId, userInfo = self.parse_request(request_message)
+    request_type, userId, userInfo, timestamp = self.parse_request(request_message)
 
     # add to user list if the request came from new user
     broadcast_decision = False
@@ -111,11 +112,11 @@ class TokenManager():
       broadcast_decision = True
       # if someone reserved the token, start the reservation timer (initialize the timestamp)
       if self.findUser(lambda x: x['reserving']):
-        self.reserve_time = utils.secsfrom1970()
+        self.reserve_time = timestamp
 
     elif request_type is self._requestTypes['acquire']:
       self.token_userId = userId
-      self.token_time = utils.secsfrom1970()
+      self.token_time = timestamp
       userInfo['acquiring'] = True  # record keeping the token
       # if acquire request from reserve user, then reset reserve time and reserve_user
       if userId == self.reserve_userId: 
@@ -145,7 +146,7 @@ class TokenManager():
 
   def envelop_message(self, request_message):
     """ envelop the class information to send """
-    request_type, userId, userInfo = self.parse_request(request_message)
+    request_type, userId, _, _ = self.parse_request(request_message)
 
     data = {
       'request_userId': userId,
