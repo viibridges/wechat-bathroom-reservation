@@ -76,6 +76,9 @@ class TokenManager():
     if self.token_userId and request_type == self._requestTypes['acquire']:
       print("can't acquire when somebody is keeping it.")
       return broadcast_decision
+    if self.reserve_userId and userId != self.reserve_userId and request_type == self._requestTypes['acquire']:
+      print("can't acquire when other has reserved it.")
+      return broadcast_decision
     if self.reserve_userId and request_type == self._requestTypes['reserve']:
       print("can't reserve when somebody has already reserved.")
       return broadcast_decision
