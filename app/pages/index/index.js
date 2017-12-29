@@ -112,15 +112,18 @@ Page({
         that.end_flasher()
         that.end_token_timer()
         that.end_clock()
-
-        // if someone has reserved the bathroom, start the reserve timer
-        if (that.data.status.reserve_userId) {
-          that.start_reserve_timer()
-        }
       }
 
+      //
+      // reserve timer logic
+      //
       // if current the received message is 'force-cancel', than end the reservation timer
       if (status['request_type'] == settings.request_types['force-cancel']){that.end_reserve_timer}
+      // if someone just returned the token and another someone has reserved the bathroom, start the reserve timer
+      if (status['request_type'] == settings.request_types['return'] &&
+       status['request_type'] == settings.request_types['force-return'] && that.data.status.reserve_userId)
+      { that.start_reserve_timer()  }
+
     })
   },
 
