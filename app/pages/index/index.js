@@ -149,12 +149,6 @@ Page({
       user_list.push(user)
     }
 
-    // DEBUG ONLY >>>>>
-    const value = userList[key]
-    user_list.push({ avatar: value.avatarUrl, mark: assets.marks.reserve, flash: true, display: true })
-    user_list.push({ avatar: value.avatarUrl, mark: assets.marks.check, flash: false, display: true })
-    // DEBUG ONLY <<<<<
-
     return user_list
   },
 

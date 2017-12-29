@@ -27,8 +27,13 @@ const generateUserId = function(userInfo) {
   return hashCode(userInfo.avatarUrl)
 }
 
+const clone = function(obj) {
+  return JSON.parse(JSON.stringify(obj))
+}
+
 module.exports = {
   formatTime: formatTime,
   generateUserId: generateUserId,
-  newDate: newDate
+  newDate: newDate,
+  clone: clone,
 }
