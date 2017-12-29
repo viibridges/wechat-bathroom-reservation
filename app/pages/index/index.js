@@ -107,7 +107,7 @@ Page({
           'gui.bg_color': settings.colors.bg.available,
           'gui.main_img': assets.bathroom.available,
           'gui.button_img': assets.buttons.green,
-          'gui.clock': "",
+          'gui.clock': "OPEN",
         })
         that.end_flasher()
         that.end_token_timer()
@@ -148,7 +148,7 @@ Page({
       else { user.mark = assets.marks.empty }
       user_list.push(user)
     }
-    
+
     // DEBUG ONLY >>>>>
     const value = userList[key]
     user_list.push({ avatar: value.avatarUrl, mark: assets.marks.reserve, flash: true, display: true })

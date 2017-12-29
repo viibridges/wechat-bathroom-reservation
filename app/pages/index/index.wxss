@@ -29,17 +29,20 @@
 
 .time-display text {
   font-size: 50rpx;
-  color: ghostwhite;
+  font-weight: bold;
+  color: #ccc;
   margin: auto;
 }
 
 text {
   font-size: 40rpx;
+  font-weight: 600;
   color: ghostwhite;
   margin-left: 5%;
 }
 
 .user-list {
+  margin-top: 10rpx;
   margin-left: 5%;
   display: flex;
   flex-direction: row;
@@ -54,7 +57,6 @@ text {
   width: 90rpx;
   height: 90rpx;
   margin-right: 15rpx;
-  margin-top: 20rpx;
   z-index: 1;
   display: flex;
 }
@@ -69,7 +71,7 @@ text {
 .avatar-sm .mark {
   position: relative;
   width: 70rpx;
-  height: 70rpx;  
+  height: 70rpx;
   z-index: 2;
   margin: auto;
 }

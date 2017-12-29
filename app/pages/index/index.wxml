@@ -10,7 +10,8 @@
   </view>
 
 
-  <text>整整齐齐一家人</text>
+  <!-- <text>整整齐齐一家人</text> -->
+  <text>USER STAT:</text>
   <view class="user-list">
     <view class="finish-list" wx:for="{{gui.user_list}}" wx:for-item="user" wx:key="idx">
       <view class="avatar-sm">
