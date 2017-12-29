@@ -33,6 +33,6 @@ App({
   },
   globalData: {
     userInfo: null,
-    serverUrl: 'ws://192.168.56.1:5678/'
+    serverUrl: 'ws://128.163.154.220:5678/'
   }
 })
